@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "daisyui": "^4.4.22",
+    "node-fetch": "^3.3.2"
+  }
+}
