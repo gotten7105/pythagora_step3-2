@@ -1,0 +1,134 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* globals.css */
+
+/* フォームに関連するスタイル */
+.form-container {
+  background-color: #FEF5EE;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form {
+  max-width: 400px;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.form-label {
+  color: #3C3C3C;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.form-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #1521A4;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.form {
+  margin-left: auto;
+  margin-right: auto;
+  border-top: 2px solid #3C3C3C; /* トップボーダーラインを追加 */
+  padding-top: 20px; /* ボーダーとフォームコンテンツとの間にスペースを作る */
+}
+/* globals.cssまたはForm.module.cssに追加 */
+
+.event-title {
+  color: #1521A4; /* タイトルの色 */
+  font-size: 24px; /* タイトルのフォントサイズ */
+  text-align: center; /* 中央揃え */
+  margin-bottom: 30px; /* 下の要素との間隔 */
+}
+
+.details-text {
+  color: #3C3C3C; /* 日付などの詳細情報の色 */
+  font-size: 16px; /* フォントサイズ */
+  text-align: center; /* 中央揃え */
+  margin-bottom: 50px; /* 下の要素との間隔 */
+}
+
+/* 既存のボタンクラスに追加するスタイル */
+.button {
+  background-color: #1521A4; /* ボタンの背景色 */
+  color: #ffffff; /* ボタンのテキスト色 */
+  padding: 12px 24px; /* ボタンの内側のスペース */
+  border: none; /* ボーダーを削除 */
+  border-radius: 25px; /* 角をラウンドさせる */
+  font-size: 16px; /* フォントサイズを大きく */
+  cursor: pointer; /* カーソルをポインターに */
+  display: block; /* ブロックレベル要素にして幅いっぱいにする */
+  margin: 20px auto; /* 上下にマージンを設定し、自動で左右のマージンを中央揃えに */
+  width: 250px; /* widthを400pxに設定 */
+  max-width: 400px; /* 最大幅を設定 */
+  text-align: center; /* テキストを中央揃えに */
+  transition: background-color 0.3s ease; /* 背景色の変更にアニメーションを適用 */
+}
+
+.button:hover {
+  background-color: #0a0f70; /* ホバー時の背景色を変更 */
+}
+
+.page-background {
+  background-color: #FEF5EE; /* 既に設定されている背景色 */
+  padding: 0px; /* 余分なパディングを取り除く */
+}
+
+/* 既存のインプットクラスに追加するスタイル */
+.input {
+  border-color: #3C3C3C; /* インプットのボーダー色 */
+  /* その他のインプットスタイリングは既存のものを使用 */
+}
+
+/* インプットラベルのスタイル */
+.label {
+  color: #3C3C3C; /* ラベルの色 */
+  /* その他のラベルスタイリングは既存のものを使用 */
+}
+/* ここに既存のグローバルスタイルがあるとします */
+
+.input-field-container {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+  max-width: 1200px; /* この値は入力フィールドの幅に応じて調整してください */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.input-label {
+  margin-right: 20px; /* ラベルとインプットフィールドの間隔 */
+  color: #3C3C3C; /* ラベルの色 */
+  font-weight: bold; /* ラベルのフォントの太さ */
+  width: 140px; /* すべてのラベルに適用する固定幅 */
+  flex-shrink: 0; /* フレックスアイテムが縮小しないようにする */
+}
+
+.input-field {
+  flex-grow: 1; /* インプットフィールドがコンテナを埋めるようにする */
+  border: 1px solid #3C3C3C;
+  outline: none; /* フォーカス時のアウトラインを消す */
+}
+
+.input-field::placeholder {
+  color: #aaa; /* プレースホルダーの色 */
+}
+
