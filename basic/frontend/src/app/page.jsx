@@ -1,5 +1,6 @@
 "use client";
 
+import styles from './styles.module.css';
 import { useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -26,16 +27,16 @@ function App() {
       console.log('送信成功');
       const jsonData = await response.json();
       console.log(jsonData);
-      router.push("http://localhost:3000/main");
+      router.push(`http://localhost:3000/mypage?mail_address=${formData.get("mail_address")}`);
     } else {
       console.log('送信失敗:', response.statusText);
     }
   };
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '2em' }}>
-      <h1>Welcome back to Cheers!</h1>
-      <form ref={formRef} onSubmit={handleSend}>
+    <div className={styles.container}>
+      <form ref={formRef} onSubmit={handleSend} style={{ width: '100%' }}>
+        <h1>Welcome back to Cheers!</h1>
         <div>
           <label>
             メールアドレス:
