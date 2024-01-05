@@ -19,4 +19,4 @@ This is a Flask-Next.js repo
 - npm install
 - npm run dev
 
-■ http://localhost:3000/customers にアクセス
+■ http://localhost:3000/ にアクセス
