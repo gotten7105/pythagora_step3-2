@@ -10,6 +10,11 @@ export default function Mypage() {
     const mail_address = useSearchParams().get("mail_address");
     console.log(mail_address);
     const [user, setUser] = useState([]); // 初期値を空の配列に変更
+    function check() {
+        if value1 !="" && value2 != ""{
+            fetch でbody使ってjsonデータに変換してflaskになげる
+        }
+    }
 
     useEffect(() => {
         const fetchAndSetUser = async () => {
