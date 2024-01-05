@@ -15,16 +15,16 @@ db = SQLAlchemy(app)
 
 class User(db.Model):
     __tablename__ = 'users'  # ここでテーブル名を指定
-    user_id = db.Column(db.Integer, primary_key=True)
-    mail_address = db.Column(db.String(120), unique=True, nullable=False)
+    user_id = db.Column(db.Integer, nullable=False)
+    mail_address = db.Column(db.String(120), primary_key=True, unique=True, nullable=False)
     password = db.Column(db.String(80), nullable=False)
     user_name = db.Column(db.String(80), nullable=False)
     company = db.Column(db.String(80), nullable=False)
-    user_class = db.Column(db.String(80), nullable=False)
     working_area = db.Column(db.String(80), nullable=False)
     user_category1 = db.Column(db.String(80), nullable=False)
     user_category2 = db.Column(db.String(80), nullable=False)
     user_category3 = db.Column(db.String(80), nullable=False)
+
 
 @app.route("/login", methods=['POST'])
 def login():
@@ -45,30 +45,23 @@ def login():
 
 @app.route("/user", methods=['GET'])
 def read_user_info():
-    mail_address = request.args.get('mail_address') # クエリパラメータの変更
-    user = User.query.filter_by(mail_address=mail_address).first()
+    mail_address = request.args.get('mail_address')
+    user = User.query.filter_by(mail_address = mail_address).first()
 
     if user:
-        # ユーザー情報が存在する場合
+        # ユーザーが存在する場合、詳細情報を返す
         user_info = {
-        "user_name": user.user_name,
-        "company": user.company,
-        "user_class":user.user_class,
-        "working_area": user.working_area,
-        "user_category1": user.user_category1,
-        "user_category2": user.user_category2,
-        "user_category3": user.user_category3,
+            "user_name": user.user_name,
+            "company": user.company,
+            "working_area": user.working_area,
+            "user_category1": user.user_category1,
+            "user_category2": user.user_category2,
+            "user_category3": user.user_category3
         }
-
-        # インデックス付きのリストに変換
-        user_info = [{'index': i, **user_info} for i in range(len(user_info))]
-
-        return json.dumps(user_info), 200, {'Content-Type': 'application/json'}
+        return jsonify(user_info)
     else:
-        # ユーザー情報が存在しない場合
-        return jsonify({"error": "user not found"}), 404
-
-
+        # ユーザーが存在しない場合
+        return jsonify({"message": "ユーザーが存在しません"})
 
 
 
