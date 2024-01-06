@@ -16,3 +16,37 @@ module.exports = {
   },
   plugins: [require("daisyui"), require("tailwindcss-animate")],
 }
+
+
+// module.exports = {
+//   daisyui: {
+//     themes: [
+//       {
+//         mytheme: {
+        
+// "primary": "#bd00ff",
+        
+// "secondary": "#009700",
+        
+// "accent": "#0058ff",
+        
+// "neutral": "#05161f",
+        
+// "base-100": "#f0feff",
+        
+// "info": "#22e8ff",
+        
+// "success": "#00c100",
+        
+// "warning": "#c76300",
+        
+// "error": "#ff6b89",
+//         },
+//       },
+//     ],
+//   },
+//   plugins: [
+//     require('daisyui'),
+//   ],
+//   //...
+// }  
