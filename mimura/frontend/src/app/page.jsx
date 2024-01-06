@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from "next/image"
 
 export default function Home() {
   return (
@@ -7,6 +8,7 @@ export default function Home() {
         <p>WebAPI Test App</p>
         <p className="text-2xl">(Blog API from jsonplaceholder)</p>
       </h1>
+
 
       <div className="flex justify-center">
         <Link href="/blog">

@@ -7,6 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors:{
+        "blue":"#1521A4"
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
