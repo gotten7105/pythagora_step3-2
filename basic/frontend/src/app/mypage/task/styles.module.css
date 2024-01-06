@@ -1,0 +1,10 @@
+.container {
+    background-image: url('../../../components/makeparty.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh; /* 画面の高さいっぱいにする */
+    display: flex;
+    justify-content: center;
+    align-items: center; /* 中央に内容を配置 */
+    font-size: 2vw
+  }
