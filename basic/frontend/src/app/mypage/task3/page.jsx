@@ -155,32 +155,28 @@ export default function Myparty3() {
                 <label className="mb-2 block" htmlFor="message">
                 こだわり
                 </label>
-                <Textarea
-                className="border rounded w-full px-4 py-2"
-                id="message"
-                placeholder="こだわり"
-                readOnly>
-                <div className="grid grid-cols-3 gap-4">
-                    <Button className="rounded-full" variant="ghost">
-                    <Badge variant="secondary">こだわり1</Badge>
-                    </Button>
-                    <Button className="rounded-full" variant="ghost">
-                    <Badge variant="secondary">こだわり2</Badge>
-                    </Button>
-                    <Button className="rounded-full" variant="ghost">
-                    <Badge variant="secondary">こだわり3</Badge>
-                    </Button>
-                    <Button className="rounded-full" variant="ghost">
-                    <Badge variant="secondary">こだわり4</Badge>
-                    </Button>
-                    <Button className="rounded-full" variant="ghost">
-                    <Badge variant="secondary">こだわり5</Badge>
-                    </Button>
-                    <Button className="rounded-full" variant="ghost">
-                    <Badge variant="secondary">こだわり6</Badge>
-                    </Button>
-                </div>
-                </Textarea>
+                <ScrollArea className="h-32 w-full rounded-md border p-2">
+            <div className="grid grid-cols-3 gap-4">
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">こだわり1</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">こだわり2</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">こだわり3</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">こだわり4</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">こだわり5</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">こだわり6</Badge>
+                </Button>
+            </div>
+            </ScrollArea>
             </div>
             <div className="mb-6">
                 <label className="mb-2 block" htmlFor="note">

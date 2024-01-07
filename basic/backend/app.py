@@ -249,7 +249,8 @@ def get_user_shops():
                     }
                     shops.append(shop_info)
 
-        return jsonify({"user_shops": shops})
+        result_json = json.dumps(shops, ensure_ascii=False)
+        return result_json
     else:
         return jsonify({"message": "User not found"}), 404
 
@@ -257,6 +258,7 @@ def get_user_shops():
 @app.route("/eventlog", methods=['GET'])
 def get_guest_events():
     guest_email = request.args.get('guest_email')
+    current_date = datetime.now().strftime("%Y-%m-%d")  # 現在の日付を取得
     guest = Guest.query.filter_by(guest_email=guest_email).first()
 
     if not guest:
@@ -270,7 +272,8 @@ def get_guest_events():
         Restaurant.restaurant_image, Restaurant.restaurant_public_evaluation
     ).join(User, User.mail_address == Event.mail_address
     ).join(Restaurant, Restaurant.restaurant_id == Event.restaurant_id
-    ).filter(Event.guest_email == guest_email
+    ).filter(Event.guest_email == guest_email,
+            Event.event_date < current_date  # 現在の日付より古いイベントのみを取得
     ).order_by(Event.event_date.desc()).limit(3)
 
     event_logs = []
@@ -288,11 +291,11 @@ def get_guest_events():
 
         event_log = {
             "event_name": event.event_name,
-            "restaurant_evaluation_ave": restaurant_evaluation_avg,
-            "event_evaluation_ave": event_evaluation_avg,
-            "event_date": event.event_date,
+            "restaurant_evaluation_ave": round(float(restaurant_evaluation_avg), 2) if restaurant_evaluation_avg is not None else None,
+            "event_evaluation_ave": round(float(event_evaluation_avg), 2) if event_evaluation_avg is not None else None,
+            "event_date": event.event_date if event.event_date else None,
             "average_charge": event.event_charge,
-            "usr_name": event.user_name,
+            "user_name": event.user_name,
             "guest_email": guest_email,
             "attendees": event.attendees,
             "total_restaurant_comment": total_restaurant_comment,
@@ -305,7 +308,8 @@ def get_guest_events():
         }
         event_logs.append(event_log)
 
-    return jsonify({"guest_event_logs": event_logs})
+    result_json = json.dumps(event_logs, ensure_ascii=False)
+    return result_json
 
 
 
