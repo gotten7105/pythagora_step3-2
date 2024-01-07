@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>ブログアプリケーション</h1>
+    <a href="/mypage" role="button">マイページに戻る</a> <!-- マイページへのリンクを追加 -->
+    <a href="/create" role="button">新規作成画面</a>
+    <a href="/logout" role="button">ログアウト</a>
+    <a href="/delete_user/{{ current_user.id }}" role="button" onclick="return confirm('アカウントを削除しますか？');">アカウント削除</a>
+    {% for post in posts %}
+    <article>
+        <h2>{{ post.title }}</h2>
+        <p>{{ post.body }}</p>
+        <p>作成日時：{{ post.created_at }}</p>
+    </article>
+    {% endfor %}
+{% endblock %}
