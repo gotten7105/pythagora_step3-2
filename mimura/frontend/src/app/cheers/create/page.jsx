@@ -36,7 +36,7 @@ export default function LoginPage() {
     return (
         <Card className="mx-auto max-w-md">
             <CardHeader className="space-y-2">
-                <CardTitle className="text-3xl font-bold">＋ 懇親会作成</CardTitle>
+                <CardTitle className="text-3xl font-bold text-blue">＋ 懇親会作成</CardTitle>
                 <CardDescription>新しい懇親会を企画しましょう！</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -87,4 +87,42 @@ export default function LoginPage() {
 //       <LoginForm />
 //     </main>
 //   )
+// }
+
+// "use client";
+// import styles from './styles.module.css';
+// import OneUserInfoCard from "../components/one_user_info_card.jsx";
+// import { useEffect, useState } from 'react';
+// import { useRouter, useSearchParams } from 'next/navigation';
+// import fetchUser from "./fetchUser";
+
+// export default function Mypage() {
+//     const router = useRouter();
+//     const mail_address = useSearchParams().get("mail_address");
+//     console.log(mail_address);
+//     const [user, setUser] = useState([]); // 初期値を空の配列に変更
+
+//     useEffect(() => {
+//         const fetchAndSetUser = async () => {
+//         const userData = await fetchUser(mail_address);
+//         console.log(userData);
+//         setUser(userData);
+//         };
+
+//         fetchAndSetUser();
+//     }, []);
+
+//     return (
+//         <>
+//         <div className="card bordered bg-white border-blue-200 border-2 max-w-sm m-4">
+//             <div className="btn btn-primary m-4 text-2xl">
+//                 +懇親会作成
+//             </div>
+//             <OneUserInfoCard {...user} />
+//             <button onClick={() => router.push("./mypage/task/")}>
+            
+//             </button>
+//         </div>
+//         </>
+//     )
 // }
