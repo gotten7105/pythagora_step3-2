@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>ログイン画面</h1>
+<form method="POST">
+    <label for="">ユーザー名</label>
+    <input type="text" name="username">
+    <label for="password">パスワード</label>
+    <input type="password" name="password">
+    <input type="submit" value="ログイン">
+</form>
+<a href="/signup" role="button">新規登録</a> <!-- 新規登録へのリンクを追加 -->
+{% if error %}
+    <p style="color:red;">{{ error }}</p>
+{% endif %}
+{% endblock %}
