@@ -3,7 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import jsonify
 from flask_cors import CORS
 from datetime import datetime
-from sqlalchemy import func
 import json
 
 import requests
@@ -26,9 +25,6 @@ class User(db.Model):
     user_category1 = db.Column(db.String(80), nullable=False)
     user_category2 = db.Column(db.String(80), nullable=False)
     user_category3 = db.Column(db.String(80), nullable=False)
-    user_shop1 = db.Column(db.Integer, db.ForeignKey('restaurants.restaurant_id'))
-    user_shop2 = db.Column(db.Integer, db.ForeignKey('restaurants.restaurant_id'))
-    user_shop3 = db.Column(db.Integer, db.ForeignKey('restaurants.restaurant_id'))
     last_update = db.Column(db.String(80), nullable=True)
 
 class Event(db.Model):
@@ -223,90 +219,6 @@ def read_guest_info():
     else:
         # ユーザーが存在しない場合
         return jsonify({"message": "ゲストが存在しません"})
-
-
-@app.route("/restaurant", methods=['GET'])
-def get_user_shops():
-    mail_address = request.args.get('mail_address')
-    user = User.query.filter_by(mail_address=mail_address).first()
-
-    if user:
-        shops = []
-        for shop_id in [user.user_shop1, user.user_shop2, user.user_shop3]:
-            if shop_id:
-                shop = Restaurant.query.get(shop_id)
-                if shop:
-                    shop_info = {
-                        "restaurant_id": shop.restaurant_id,
-                        "restaurant_name": shop.restaurant_name,
-                        "genre": shop.genre,
-                        "average_charge": shop.average_charge,
-                        "restaurant_address": shop.restaurant_address,
-                        "restaurant_url": shop.restaurant_url,
-                        "restaurant_image": shop.restaurant_image,
-                        "regular_holiday": shop.regular_holiday,
-                        "restaurant_public_evaluation": shop.restaurant_public_evaluation
-                    }
-                    shops.append(shop_info)
-
-        return jsonify({"user_shops": shops})
-    else:
-        return jsonify({"message": "User not found"}), 404
-
-
-@app.route("/eventlog", methods=['GET'])
-def get_guest_events():
-    guest_email = request.args.get('guest_email')
-    guest = Guest.query.filter_by(guest_email=guest_email).first()
-
-    if not guest:
-        return jsonify({"message": "Guest not found"}), 404
-
-    # イベント情報と関連するユーザー、レストラン情報を取得
-    events_data = db.session.query(
-        Event.event_id, Event.restaurant_id, Event.mail_address, Event.event_name,
-        Event.event_date, Event.event_charge, Event.attendees, User.user_name,
-        Restaurant.restaurant_name, Restaurant.genre, Restaurant.restaurant_address,
-        Restaurant.restaurant_image, Restaurant.restaurant_public_evaluation
-    ).join(User, User.mail_address == Event.mail_address
-    ).join(Restaurant, Restaurant.restaurant_id == Event.restaurant_id
-    ).filter(Event.guest_email == guest_email
-    ).order_by(Event.event_date.desc()).limit(3)
-
-    event_logs = []
-    for event in events_data:
-        # 各イベントに対する参加情報を取得
-        participant_info = Participant_information.query.filter_by(event_id=event.event_id).all()
-
-        # レストラン評価とイベント評価の平均を計算
-        restaurant_evaluation_avg = db.session.query(func.avg(Participant_information.restaurant_evaluation)).filter_by(event_id=event.event_id).scalar()
-        event_evaluation_avg = db.session.query(func.avg(Participant_information.event_evaluation)).filter_by(event_id=event.event_id).scalar()
-
-        # コメントの結合
-        total_restaurant_comment = "\n".join([p.restaurant_comment for p in participant_info if p.restaurant_comment])
-        total_event_comment = "\n".join([p.event_comment for p in participant_info if p.event_comment])
-
-        event_log = {
-            "event_name": event.event_name,
-            "restaurant_evaluation_ave": restaurant_evaluation_avg,
-            "event_evaluation_ave": event_evaluation_avg,
-            "event_date": event.event_date,
-            "average_charge": event.event_charge,
-            "usr_name": event.user_name,
-            "guest_email": guest_email,
-            "attendees": event.attendees,
-            "total_restaurant_comment": total_restaurant_comment,
-            "total_event_comment": total_event_comment,
-            "restaurant_name": event.restaurant_name,
-            "genre": event.genre,
-            "restaurant_address": event.restaurant_address,
-            "restaurant_image": event.restaurant_image,
-            "restaurant_public_evaluation": event.restaurant_public_evaluation
-        }
-        event_logs.append(event_log)
-
-    return jsonify({"guest_event_logs": event_logs})
-
 
 
 if __name__ == "__main__":
