@@ -173,11 +173,7 @@ export default function Myparty2() {
             <label className="mb-2 block" htmlFor="message">
             こだわり
             </label>
-            <Textarea
-            className="border rounded w-full px-4 py-2"
-            id="message"
-            placeholder="こだわり"
-            readOnly>
+            <ScrollArea className="h-32 w-full rounded-md border p-2">
             <div className="grid grid-cols-3 gap-4">
                 <Button className="rounded-full" variant="ghost">
                 <Badge variant="secondary">こだわり1</Badge>
@@ -198,7 +194,7 @@ export default function Myparty2() {
                 <Badge variant="secondary">こだわり6</Badge>
                 </Button>
             </div>
-            </Textarea>
+            </ScrollArea>
         </div>
         <div className="mb-6">
             <label className="mb-2 block" htmlFor="note">

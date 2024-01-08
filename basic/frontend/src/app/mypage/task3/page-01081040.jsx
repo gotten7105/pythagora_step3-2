@@ -38,15 +38,53 @@ export default function Myparty3() {
         fetchAndSetEvent();
     }, []);
 
-    const handleRestaurantChange = (event) => {
-        setRestaurantId(event.target.value);
-        router.push(`/mypage/task4?event_id=${event_id}&restaurant_id=${restaurant_id}`);
+    const [buttonStates, setButtonStates] = useState({
+        "AAA日本料理": false,
+        "海鮮": false,
+        "鮨": false,
+        "天ぷら": false,
+        "鍋": false,
+        "郷土料理": false,
+        "居酒屋": false,
+        "焼き鳥": false,
+        "焼肉": false,
+        "ステーキ": false,
+        "イタリアン": false,
+        "ダイニングバー": false,
+        "フレンチ": false,
+        "スペイン料理": false,
+        "中華料理": false,
+        "韓国料理": false,
+    });
+
+    const toggleButtonState = (buttonName) => {
+        setButtonStates((prevStates) => ({
+            ...prevStates,
+            [buttonName]: !prevStates[buttonName],
+        }));
+    };
+
+    const renderGenreButtons = () => {
+        return Object.keys(buttonStates).map((buttonName) => (
+            <Button
+                key={buttonName}
+                className={`rounded-full ${buttonStates[buttonName] ? "bg-red-500" : "bg-blue-500"}`}
+                variant="ghost"
+                onClick={() => toggleButtonState(buttonName)}>
+                <Badge variant="secondary">{buttonName}</Badge>
+            </Button>
+        ));
     };
 
     const handleGuestChange = async (event) => {
         setGuestEmail(event.target.value);
         const url = `/mypage/guest?guest_email=${guest_email}`;
         window.open(url, '_blank');
+    };
+
+    const handleRestaurantChange = (event) => {
+        setRestaurantId(event.target.value);
+        router.push(`/mypage/task4?event_id=${event_id}&restaurant_id=${restaurant_id}`);
     };
 
     return (
@@ -137,18 +175,11 @@ export default function Myparty3() {
                 </Select>
             </div>
             <div className="mb-6">
-                <label className="mb-2 block" htmlFor="details">
-                店舗ジャンル
-                </label>
+                <label className="mb-2 block" htmlFor="details">店舗ジャンル</label>
                 <ScrollArea className="h-32 w-full rounded-md border p-2">
-                <div className="space-x-2">
-                    <Button className="rounded-full" variant="ghost">
-                    <Badge variant="secondary">和食</Badge>
-                    </Button>
-                    <Button className="rounded-full" variant="ghost">
-                    <Badge variant="secondary">洋食・欧風</Badge>
-                    </Button>
-                </div>
+                    <div className="space-x-2">
+                        {renderGenreButtons()}
+                    </div>
                 </ScrollArea>
             </div>
             <div className="mb-6">
@@ -156,24 +187,39 @@ export default function Myparty3() {
                 こだわり
                 </label>
                 <ScrollArea className="h-32 w-full rounded-md border p-2">
-            <div className="grid grid-cols-3 gap-4">
+                <div className="space-x-2">
                 <Button className="rounded-full" variant="ghost">
-                <Badge variant="secondary">こだわり1</Badge>
+                <Badge variant="secondary">日本酒</Badge>
                 </Button>
                 <Button className="rounded-full" variant="ghost">
-                <Badge variant="secondary">こだわり2</Badge>
+                <Badge variant="secondary">焼酎</Badge>
                 </Button>
                 <Button className="rounded-full" variant="ghost">
-                <Badge variant="secondary">こだわり3</Badge>
+                <Badge variant="secondary">ワイン</Badge>
                 </Button>
                 <Button className="rounded-full" variant="ghost">
-                <Badge variant="secondary">こだわり4</Badge>
+                <Badge variant="secondary">スイーツ</Badge>
                 </Button>
                 <Button className="rounded-full" variant="ghost">
-                <Badge variant="secondary">こだわり5</Badge>
+                <Badge variant="secondary">ダーツ</Badge>
                 </Button>
                 <Button className="rounded-full" variant="ghost">
-                <Badge variant="secondary">こだわり6</Badge>
+                <Badge variant="secondary">カラオケ</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">飲み放題あり</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">個室</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">貸切可</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">禁煙</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">喫煙可</Badge>
                 </Button>
             </div>
             </ScrollArea>

@@ -142,12 +142,56 @@ export default function Myparty3() {
                 </label>
                 <ScrollArea className="h-32 w-full rounded-md border p-2">
                 <div className="space-x-2">
-                    <Button className="rounded-full" variant="ghost">
-                    <Badge variant="secondary">和食</Badge>
-                    </Button>
-                    <Button className="rounded-full" variant="ghost">
-                    <Badge variant="secondary">洋食・欧風</Badge>
-                    </Button>
+                <Button className="rounded-full" variant="ghost"
+                        onClick={(e) => {
+                        e.preventDefault();}}>
+                <Badge variant="secondary">日本料理</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">海鮮</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">鮨</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">天ぷら</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">鍋</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">郷土料理</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">居酒屋</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">焼き鳥</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">焼肉</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">ステーキ</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">イタリアン</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">ダイニングバー</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">フレンチ</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">スペイン料理</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">中華料理</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">韓国料理</Badge>
+                </Button>
                 </div>
                 </ScrollArea>
             </div>
@@ -156,24 +200,39 @@ export default function Myparty3() {
                 こだわり
                 </label>
                 <ScrollArea className="h-32 w-full rounded-md border p-2">
-            <div className="grid grid-cols-3 gap-4">
+                <div className="space-x-2">
                 <Button className="rounded-full" variant="ghost">
-                <Badge variant="secondary">こだわり1</Badge>
+                <Badge variant="secondary">日本酒</Badge>
                 </Button>
                 <Button className="rounded-full" variant="ghost">
-                <Badge variant="secondary">こだわり2</Badge>
+                <Badge variant="secondary">焼酎</Badge>
                 </Button>
                 <Button className="rounded-full" variant="ghost">
-                <Badge variant="secondary">こだわり3</Badge>
+                <Badge variant="secondary">ワイン</Badge>
                 </Button>
                 <Button className="rounded-full" variant="ghost">
-                <Badge variant="secondary">こだわり4</Badge>
+                <Badge variant="secondary">スイーツ</Badge>
                 </Button>
                 <Button className="rounded-full" variant="ghost">
-                <Badge variant="secondary">こだわり5</Badge>
+                <Badge variant="secondary">ダーツ</Badge>
                 </Button>
                 <Button className="rounded-full" variant="ghost">
-                <Badge variant="secondary">こだわり6</Badge>
+                <Badge variant="secondary">カラオケ</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">飲み放題あり</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">個室</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">貸切可</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">禁煙</Badge>
+                </Button>
+                <Button className="rounded-full" variant="ghost">
+                <Badge variant="secondary">喫煙可</Badge>
                 </Button>
             </div>
             </ScrollArea>
