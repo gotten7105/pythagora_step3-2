@@ -225,8 +225,31 @@ def read_guest_info():
         return jsonify({"message": "ゲストが存在しません"})
 
 
+@app.route("/restaurant", methods=['POST'])
+def post_restaurant():
+    data = request.get_json()
+    event_id = data['event_id']
+    restaurant_id = data['restaurant_id']
+
+    # 既存のイベントを取得
+    event = Event.query.filter_by(event_id=event_id).first()
+
+    if event:
+        # イベントのデータを更新
+        event.restaurant_id = restaurant_id
+        event.last_update = datetime.now()
+
+        # データベースに変更をコミット
+        db.session.commit()
+
+        return jsonify({"message": "Event updated successfully", "event_id": event_id}), 200
+    else:
+        # イベントが存在しない場合
+        return jsonify({"message": "Event not found"}), 404
+
+
 @app.route("/restaurant", methods=['GET'])
-def get_user_shops():
+def get_restaurant():
     mail_address = request.args.get('mail_address')
     user = User.query.filter_by(mail_address=mail_address).first()
 
@@ -253,6 +276,38 @@ def get_user_shops():
         return result_json
     else:
         return jsonify({"message": "User not found"}), 404
+
+
+@app.route("/set_restaurant", methods=['GET'])
+def get_restaurant_info():
+    event_id = request.args.get('event_id')
+    event_data = db.session.query(
+        Event.restaurant_id,
+        Restaurant.restaurant_name, Restaurant.genre, Restaurant.average_charge,
+        Restaurant.restaurant_address, Restaurant.restaurant_url,
+        Restaurant.restaurant_image, Restaurant.regular_holiday,
+        Restaurant.restaurant_public_evaluation, Restaurant.open_time,
+    ).join(Restaurant, Restaurant.restaurant_id == Event.restaurant_id
+    ).filter(Event.event_id == event_id
+    ).first()
+
+    if not event_data:
+        return jsonify({"message": "Event or Restaurant not found"}), 404
+
+    event_info = {
+        "restaurant_id": event_data.restaurant_id,
+        "restaurant_name": event_data.restaurant_name,
+        "genre": event_data.genre,
+        "average_charge": event_data.average_charge,
+        "restaurant_address": event_data.restaurant_address,
+        "restaurant_url": event_data.restaurant_url,
+        "restaurant_image": event_data.restaurant_image,
+        "regular_holiday": event_data.regular_holiday,
+        "restaurant_public_evaluation": event_data.restaurant_public_evaluation,
+        "open_time": event_data.open_time,
+    }
+    return jsonify(event_info)
+
 
 
 @app.route("/eventlog", methods=['GET'])
