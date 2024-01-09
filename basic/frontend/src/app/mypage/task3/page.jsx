@@ -1,6 +1,6 @@
 "use client";
 import styles from './styles.module.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useState,useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import fetchEvent from './fetchEvent';
 
@@ -8,17 +8,17 @@ import { Button } from "@/components/ui/button"
 import { SelectValue, SelectTrigger, SelectItem, SelectContent, Select } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Textarea } from "@/components/ui/textarea"
 
 export default function Myparty3() {
     const router = useRouter();
     const event_id = useSearchParams().get('event_id');
     console.log(event_id);
+    const shop = useRef('');
     const [event_name, setEventNate] = useState('');
     const [guest_email, setGuestEmail] = useState('');
     const [event_date, setEventDate] = useState('');
     const [event_time, setEventTime] = useState('');
-    const [restaurant_id, setRestaurantId] = useState('');
+    const [recommend, setRecommend] = useState('');
 
     useEffect(() => {
         const fetchAndSetEvent = async () => {
@@ -38,15 +38,112 @@ export default function Myparty3() {
         fetchAndSetEvent();
     }, []);
 
-    const handleRestaurantChange = (event) => {
-        setRestaurantId(event.target.value);
-        router.push(`/mypage/task4?event_id=${event_id}&restaurant_id=${restaurant_id}`);
+    const [buttonStates, setButtonStates] = useState({
+        "日本料理": false,
+        "海鮮": false,
+        "鮨": false,
+        "天ぷら": false,
+        "鍋": false,
+        "郷土料理": false,
+        "居酒屋": false,
+        "焼き鳥": false,
+        "焼肉": false,
+        "ステーキ": false,
+        "イタリアン": false,
+        "ダイニングバー": false,
+        "フレンチ": false,
+        "スペイン料理": false,
+        "中華料理": false,
+        "韓国料理": false,
+    });
+
+    const [button2States, setButton2States] = useState({
+        "日本酒": false,
+        "焼酎": false,
+        "ワイン": false,
+        "スイーツ": false,
+        "ダーツ": false,
+        "カラオケ": false,
+        "飲み放題あり": false,
+        "個室": false,
+        "貸切可": false,
+        "禁煙": false,
+        "喫煙可": false,
+    });
+
+
+    const toggleButtonState = (buttonName) => {
+        setButtonStates((prevStates) => ({
+            ...prevStates,
+            [buttonName]: !prevStates[buttonName],
+        }));
+        console.log(buttonStates);
     };
 
-    const handleGuestChange = async (event) => {
-        setGuestEmail(event.target.value);
+    const toggle2ButtonState = (buttonName) => {
+        setButton2States((prevStates) => ({
+            ...prevStates,
+            [buttonName]: !prevStates[buttonName],
+        }));
+    console.log(button2States);
+    };
+
+    const renderGenreButtons = () => {
+        return Object.keys(buttonStates).map((buttonName) => (
+            <Button
+                key={buttonName}
+                className={`rounded-full ${buttonStates[buttonName] ? "bg-red-500" : "bg-blue-500"}`}
+                variant="ghost"
+                onClick={() => toggleButtonState(buttonName)}>
+                <Badge variant="secondary">{buttonName}</Badge>
+            </Button>
+        ));
+    };
+
+    const render2GenreButtons = () => {
+        return Object.keys(button2States).map((buttonName) => (
+            <Button
+                key={buttonName}
+                className={`rounded-full ${button2States[buttonName] ? "bg-red-500" : "bg-blue-500"}`}
+                variant="ghost"
+                onClick={() => toggle2ButtonState(buttonName)}>
+                <Badge variant="secondary">{buttonName}</Badge>
+            </Button>
+        ));
+    };
+
+    const handleGuestChange = () => {
         const url = `/mypage/guest?guest_email=${guest_email}`;
         window.open(url, '_blank');
+    };
+
+    const handleRecommendChange = () => {
+        const url = `/mypage/recommend?select=${binaryString}`;
+        window.open(url, '_blank');
+    };
+
+    const handleRestaurantChange = async() => {
+        var restaurant_id = shop.current.value
+        const body_msg = JSON.stringify({
+            event_id: event_id,
+            restaurant_id: restaurant_id,
+        });
+        console.log(body_msg);
+        const response = await fetch('http://127.0.0.1:5000/restaurant', {
+                method: 'POST',
+                body: body_msg,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                console.log('送信成功');
+                const jsonData = await response.json();
+                console.log(jsonData);
+                router.push(`/mypage/task4?event_id=${event_id}`);
+                // alert("Check")
+            }
     };
 
     return (
@@ -57,12 +154,11 @@ export default function Myparty3() {
                 <FileEditIcon className="h-4 w-4" />
             </Button>
             </h2>
-            <form>
             <div className="grid grid-cols-3 gap-4 mb-6">
                 <div className="flex flex-col">
                 <label className="mb-2" htmlFor="start-date">
                     日付
-                </label>n
+                </label>
                 <p className="border rounded-full px-4 py-2" id="start-date">
                 {event_date}
                 </p>
@@ -137,46 +233,21 @@ export default function Myparty3() {
                 </Select>
             </div>
             <div className="mb-6">
-                <label className="mb-2 block" htmlFor="details">
-                店舗ジャンル
-                </label>
+                <label className="mb-2 block" htmlFor="details">店舗ジャンル</label>
                 <ScrollArea className="h-32 w-full rounded-md border p-2">
-                <div className="space-x-2">
-                    <Button className="rounded-full" variant="ghost">
-                    <Badge variant="secondary">和食</Badge>
-                    </Button>
-                    <Button className="rounded-full" variant="ghost">
-                    <Badge variant="secondary">洋食・欧風</Badge>
-                    </Button>
-                </div>
+                    <div className="space-x-2">
+                        {renderGenreButtons()}
+                    </div>
                 </ScrollArea>
             </div>
             <div className="mb-6">
-                <label className="mb-2 block" htmlFor="message">
-                こだわり
-                </label>
+                <label className="mb-2 block" htmlFor="details">店舗ジャンル</label>
                 <ScrollArea className="h-32 w-full rounded-md border p-2">
-            <div className="grid grid-cols-3 gap-4">
-                <Button className="rounded-full" variant="ghost">
-                <Badge variant="secondary">こだわり1</Badge>
-                </Button>
-                <Button className="rounded-full" variant="ghost">
-                <Badge variant="secondary">こだわり2</Badge>
-                </Button>
-                <Button className="rounded-full" variant="ghost">
-                <Badge variant="secondary">こだわり3</Badge>
-                </Button>
-                <Button className="rounded-full" variant="ghost">
-                <Badge variant="secondary">こだわり4</Badge>
-                </Button>
-                <Button className="rounded-full" variant="ghost">
-                <Badge variant="secondary">こだわり5</Badge>
-                </Button>
-                <Button className="rounded-full" variant="ghost">
-                <Badge variant="secondary">こだわり6</Badge>
-                </Button>
-            </div>
-            </ScrollArea>
+                    <div className="space-x-2">
+                        {render2GenreButtons()}
+                    </div>
+                </ScrollArea>
+                
             </div>
             <div className="mb-6">
                 <label className="mb-2 block" htmlFor="note">
@@ -185,14 +256,16 @@ export default function Myparty3() {
                 <input className="border rounded w-2/3 px-4 py-2"
                 name="restaurant_id"
                 type="number"
-                onChange={handleRestaurantChange}
+                onBlur={handleRestaurantChange}
+                ref={shop}
                 />
+                <Button className="self-end" onClick={handleRecommendChange}>▶ リコメンド</Button>
             </div>
+            
             <div className="flex justify-between items-center">
                 <Button variant="outline">キャンセル</Button>
                 <Button className="bg-blue-600 text-white">保存</Button>
             </div>
-            </form>
         </div>)
         );
     }
