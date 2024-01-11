@@ -71,13 +71,33 @@ export default function Myparty3() {
         "喫煙可": false,
     });
 
+    const [binaryString, setBinaryString] = useState('');
+    const [binaryString2, setBinaryString2] = useState('');
+
+    useEffect(() => {
+        console.log('buttonStatesが更新されました:', buttonStates);
+        const newBinaryString = Object.values(buttonStates)
+            .map(value => value ? '1' : '0')
+            .join('');
+        setBinaryString(newBinaryString); // 状態を更新
+        console.log(newBinaryString);
+    }, [buttonStates]);
+
+    useEffect(() => {
+        console.log('button2Statesが更新されました:', button2States);
+        const newBinaryString2 = Object.values(button2States)
+            .map(value => value ? '1' : '0')
+            .join('');
+        setBinaryString2(newBinaryString2); // 状態を更新
+        console.log(newBinaryString2);
+    }, [button2States]);
+
 
     const toggleButtonState = (buttonName) => {
         setButtonStates((prevStates) => ({
             ...prevStates,
             [buttonName]: !prevStates[buttonName],
         }));
-        console.log(buttonStates);
     };
 
     const toggle2ButtonState = (buttonName) => {
@@ -85,7 +105,6 @@ export default function Myparty3() {
             ...prevStates,
             [buttonName]: !prevStates[buttonName],
         }));
-    console.log(button2States);
     };
 
     const renderGenreButtons = () => {
@@ -118,7 +137,7 @@ export default function Myparty3() {
     };
 
     const handleRecommendChange = () => {
-        const url = `/mypage/recommend?select=${binaryString}`;
+        const url = `/mypage/recommend_random?select=${binaryString}${binaryString2}`;
         window.open(url, '_blank');
     };
 
