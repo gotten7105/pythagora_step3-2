@@ -8,6 +8,33 @@ import './styles.css';
 import { Button } from "@/components/ui/button";
 import { SelectValue, SelectTrigger, SelectItem, SelectContent, Select } from "@/components/ui/select";
 
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
+const StarRating = ({ rating }) => {
+  // fullStars: 完全な星の数
+  const fullStars = Math.floor(rating);
+  // remaining: 残りの評価点数（半星を判断するために使用）
+  const remaining = rating - fullStars;
+  // halfStar: 半星が必要かどうかを判断
+  const halfStar = remaining >= 0.5 ? 1 : 0;
+  // emptyStars: 空の星の数
+  const emptyStars = 5 - fullStars - halfStar;
+
+  return (
+    <div className="star-rating">
+      {[...Array(fullStars)].map((_, i) => (
+        <i key={`full_${i}`} className="fas fa-star text-yellow-400"></i>
+      ))}
+      {halfStar === 1 && <i key="half" className="fas fa-star-half-alt text-yellow-400"></i>}
+      {[...Array(emptyStars)].map((_, i) => (
+        <i key={`empty_${i}`} className="far fa-star text-yellow-400"></i>
+      ))}
+      <span className="rating-number">{rating.toFixed(2)}</span>
+    </div>
+  );
+};
+
+
 export default function Mypage4() {
   const router = useRouter();
   const [searchParams] = useSearchParams();
@@ -110,6 +137,7 @@ export default function Mypage4() {
         <div className="card-body">
           <h2 className="card-title">{restaurantData.restaurant_name}</h2>
           <p>ジャンル：{restaurantData.genre}</p>
+          <StarRating rating={Number(restaurantData.restaurant_public_evaluation)} />
           <p>平均予算：{restaurantData.average_charge}円</p>
           <p>住所：{restaurantData.restaurant_address}</p>
           <div className="card-actions justify-end">

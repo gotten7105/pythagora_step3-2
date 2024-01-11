@@ -20,3 +20,13 @@
     margin-bottom: 20px;
   }
   
+  .checked {
+    color: orange;
+  }
+  
+  .star-rating .rating-number {
+    margin-left: 8px;
+    font-size: 14px;
+    color: #333;
+  }
+  
