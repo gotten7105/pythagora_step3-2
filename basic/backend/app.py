@@ -4,7 +4,9 @@ from flask import jsonify
 from flask_cors import CORS
 from datetime import datetime
 from sqlalchemy import func
+from sqlalchemy import desc
 import json
+import re
 
 import requests
 
@@ -81,6 +83,11 @@ class Participant_information(db.Model):
     event_evaluation = db.Column(db.Integer, nullable=True)
     event_comment = db.Column(db.String(300), nullable=True)
     last_update = db.Column(db.String(80), nullable=True)
+
+
+def extract_id_from_url(url):
+    match = re.search(r'/(\d+)/?$', url)
+    return int(match.group(1)) if match else 0
 
 
 @app.route("/login", methods=['POST'])
@@ -372,18 +379,18 @@ def get_recommend_random():
     data = request.args.get('select')
     print(data)
 
-    cate_arrray2 = ["日本料理", "海鮮","鮨", "天ぷら", "鍋", "郷土料理", "居酒屋", "焼き鳥",
+    cate_array2 = ["日本料理", "海鮮","鮨", "天ぷら", "鍋", "郷土料理", "居酒屋", "焼き鳥",
                 "焼肉", "ステーキ", "イタリアン", "ダイニングバー", "フレンチ",
                 "スペイン料理", "中華料理", "韓国料理",
                 "日本酒", "焼酎", "ワイン", "スイーツ", "ダーツ",
                 "カラオケ", "飲み放題あり", "個室", "貸切可", "禁煙", "喫煙可"]
 
-    flask_arrray2 = {}
+    flask_array2 = {}
     query_array2 = []
     for i in range(27):
         if data[i] == "1":
-            flask_arrray2[cate_arrray2[i]] = True
-            query_array2.append(cate_arrray2[i])
+            flask_array2[cate_array2[i]] = True
+            query_array2.append(cate_array2[i])
 
     subquery = db.session.query(
         Event.restaurant_id,
@@ -407,7 +414,7 @@ def get_recommend_random():
         category_results = []
         for restaurant in restaurants:
             # 平均評価を取得
-            avg_our_evaluation = db.session.query(subquery.c.average_evaluation) \
+            avg_evaluation = db.session.query(subquery.c.average_evaluation) \
                                     .filter(subquery.c.restaurant_id == restaurant.restaurant_id) \
                                     .scalar()
 
@@ -421,7 +428,7 @@ def get_recommend_random():
                 "restaurant_image": restaurant.restaurant_image,
                 "regular_holiday": restaurant.regular_holiday,
                 "restaurant_public_evaluation": restaurant.restaurant_public_evaluation,
-                "average_our_evaluation": float(avg_our_evaluation) if avg_our_evaluation else None  # 平均評価を追加
+                "average_evaluation": float(avg_evaluation) if avg_evaluation else None  # 平均評価を追加
             })
 
         results[category] = category_results
@@ -434,18 +441,18 @@ def get_recommend_restaurant_public_evaluation():
     data = request.args.get('select')
     print(data)
 
-    cate_arrray2 = ["日本料理", "海鮮","鮨", "天ぷら", "鍋", "郷土料理", "居酒屋", "焼き鳥",
+    cate_array2 = ["日本料理", "海鮮","鮨", "天ぷら", "鍋", "郷土料理", "居酒屋", "焼き鳥",
                 "焼肉", "ステーキ", "イタリアン", "ダイニングバー", "フレンチ",
                 "スペイン料理", "中華料理", "韓国料理",
                 "日本酒", "焼酎", "ワイン", "スイーツ", "ダーツ",
                 "カラオケ", "飲み放題あり", "個室", "貸切可", "禁煙", "喫煙可"]
 
-    flask_arrray2 = {}
+    flask_array2 = {}
     query_array2 = []
     for i in range(27):
         if data[i] == "1":
-            flask_arrray2[cate_arrray2[i]] = True
-            query_array2.append(cate_arrray2[i])
+            flask_array2[cate_array2[i]] = True
+            query_array2.append(cate_array2[i])
 
     subquery = db.session.query(
         Event.restaurant_id,
@@ -453,17 +460,20 @@ def get_recommend_restaurant_public_evaluation():
     ).join(Event, Event.event_id == Participant_information.event_id) \
     .group_by(Event.restaurant_id).subquery()
 
-    results = {}
+    results = {}  # results を空の辞書として初期化
+
     for category in query_array2:
         if category == '鮨':
             # 「鮨」または「寿司」を含むレストランを取得（評価の高い順）
             restaurants = Restaurant.query.filter(
-                (Restaurant.genre.like("%鮨%")) | (Restaurant.genre.like("%寿司%"))
+                (Restaurant.genre.like("%鮨%") | Restaurant.genre.like("%寿司%")),
+                Restaurant.restaurant_public_evaluation != ''
             ).order_by(Restaurant.restaurant_public_evaluation.desc()).limit(3).all()
         else:
             # その他のカテゴリを含むレストランを取得（評価の高い順）
             restaurants = Restaurant.query.filter(
-                Restaurant.genre.like(f"%{category}%")
+                Restaurant.genre.like(f"%{category}%"),
+                Restaurant.restaurant_public_evaluation != ''
             ).order_by(Restaurant.restaurant_public_evaluation.desc()).limit(3).all()
 
         category_results = []
@@ -496,65 +506,140 @@ def get_recommend_average_evaluation():
     data = request.args.get('select')
     print(data)
 
-    cate_arrray2 = ["日本料理", "海鮮","鮨", "天ぷら", "鍋", "郷土料理", "居酒屋", "焼き鳥",
+    cate_array2 = ["日本料理", "海鮮","鮨", "天ぷら", "鍋", "郷土料理", "居酒屋", "焼き鳥",
                 "焼肉", "ステーキ", "イタリアン", "ダイニングバー", "フレンチ",
                 "スペイン料理", "中華料理", "韓国料理",
                 "日本酒", "焼酎", "ワイン", "スイーツ", "ダーツ",
                 "カラオケ", "飲み放題あり", "個室", "貸切可", "禁煙", "喫煙可"]
 
-    flask_arrray2 = {}
+    flask_array2 = {}
     query_array2 = []
     for i in range(27):
         if data[i] == "1":
-            flask_arrray2[cate_arrray2[i]] = True
-            query_array2.append(cate_arrray2[i])
+            flask_array2[cate_array2[i]] = True
+            query_array2.append(cate_array2[i])
 
-        subquery = db.session.query(
-            Event.restaurant_id,
-            func.avg(Participant_information.restaurant_evaluation).label("average_evaluation")
-        ).join(Event, Event.event_id == Participant_information.event_id) \
-        .group_by(Event.restaurant_id).subquery()
+    subquery = db.session.query(
+        Event.restaurant_id,
+        func.avg(Participant_information.restaurant_evaluation).label("average_evaluation")
+    ).join(Event, Event.event_id == Participant_information.event_id) \
+    .group_by(Event.restaurant_id).subquery()
 
-        results = {}
-        for category in query_array2:
-            # ジャンルに基づいてレストランをフィルタリングし、サブクエリで平均評価が null でないレストランのみを選択
+    results = {}
+    for category in query_array2:
+        if category == '鮨':
+            # ジャンルが「鮨」の場合、「寿司」を含むレストランも取得する
+            query = Restaurant.query.join(
+                subquery, Restaurant.restaurant_id == subquery.c.restaurant_id
+            ).filter(
+                (Restaurant.genre.like("%鮨%") | Restaurant.genre.like("%寿司%")),
+                subquery.c.average_evaluation.isnot(None)
+            )
+        else:
+            # それ以外のカテゴリは通常通り処理を行う
             query = Restaurant.query.join(
                 subquery, Restaurant.restaurant_id == subquery.c.restaurant_id
             ).filter(
                 Restaurant.genre.like(f"%{category}%"),
-                subquery.c.average_evaluation != None
-            ).order_by(
-                subquery.c.average_evaluation.desc()
-            ).limit(3)
+                subquery.c.average_evaluation.isnot(None)
+            )
 
-            restaurants = query.all()
+        # 平均評価で降順に並べ替えて上位3件を取得
+        query = query.order_by(desc(subquery.c.average_evaluation)).limit(3)
+        restaurants = query.all()
 
-            category_results = []
-            for restaurant in restaurants:
-                avg_evaluation = db.session.query(subquery.c.average_evaluation) \
-                                        .filter(subquery.c.restaurant_id == restaurant.restaurant_id) \
-                                        .scalar()
+        category_results = []
+        for restaurant in restaurants:
+            avg_evaluation = db.session.query(subquery.c.average_evaluation) \
+                                    .filter(subquery.c.restaurant_id == restaurant.restaurant_id) \
+                                    .scalar()
 
-                avg_evaluation_rounded = round(float(avg_evaluation), 2) if avg_evaluation else None
+            avg_evaluation_rounded = round(float(avg_evaluation), 2) if avg_evaluation else None
 
-                category_results.append({
-                    "restaurant_id": restaurant.restaurant_id,
-                    "restaurant_name": restaurant.restaurant_name,
-                    "genre": restaurant.genre,
-                    "average_charge": restaurant.average_charge,
-                    "restaurant_address": restaurant.restaurant_address,
-                    "restaurant_url": restaurant.restaurant_url,
-                    "restaurant_image": restaurant.restaurant_image,
-                    "regular_holiday": restaurant.regular_holiday,
-                    "restaurant_public_evaluation": restaurant.restaurant_public_evaluation,
-                    "average_evaluation": avg_evaluation_rounded
-                })
+            category_results.append({
+                "restaurant_id": restaurant.restaurant_id,
+                "restaurant_name": restaurant.restaurant_name,
+                "genre": restaurant.genre,
+                "average_charge": restaurant.average_charge,
+                "restaurant_address": restaurant.restaurant_address,
+                "restaurant_url": restaurant.restaurant_url,
+                "restaurant_image": restaurant.restaurant_image,
+                "regular_holiday": restaurant.regular_holiday,
+                "restaurant_public_evaluation": restaurant.restaurant_public_evaluation,
+                "average_evaluation": avg_evaluation_rounded
+            })
 
-            results[category] = category_results
+        results[category] = category_results
 
     return jsonify(results)
 
 
+@app.route("/recommend_new_open", methods=['GET'])
+def get_recommend_new_open():
+    data = request.args.get('select')
+    print(data)
+
+    cate_array2 = ["日本料理", "海鮮","鮨", "天ぷら", "鍋", "郷土料理", "居酒屋", "焼き鳥",
+                "焼肉", "ステーキ", "イタリアン", "ダイニングバー", "フレンチ",
+                "スペイン料理", "中華料理", "韓国料理",
+                "日本酒", "焼酎", "ワイン", "スイーツ", "ダーツ",
+                "カラオケ", "飲み放題あり", "個室", "貸切可", "禁煙", "喫煙可"]
+
+    flask_array2 = {}
+    query_array2 = []
+    for i in range(27):
+        if data[i] == "1":
+            flask_array2[cate_array2[i]] = True
+            query_array2.append(cate_array2[i])
+
+    subquery = db.session.query(
+        Event.restaurant_id,
+        func.avg(Participant_information.restaurant_evaluation).label("average_evaluation")
+    ).join(Event, Event.event_id == Participant_information.event_id) \
+    .group_by(Event.restaurant_id).subquery()
+
+    results = {}
+    for category in query_array2:
+    # ジャンルが「鮨」の場合は「鮨」または「寿司」が含まれるレストランを抽出する
+        if category == '鮨':
+            # ジャンルが「鮨」の場合、「寿司」を含むレストランも取得する
+            restaurants = Restaurant.query.filter(
+                (Restaurant.genre.like("%鮨%") | Restaurant.genre.like("%寿司%")),
+            )
+        else:
+            # それ以外のカテゴリは通常通り処理を行う
+            restaurants = Restaurant.query.filter(
+                Restaurant.genre.like(f"%{category}%")
+            )
+
+        # restaurant_url の末尾の数字に基づいてレコードを降順に並べ替える
+        sorted_restaurants = sorted(restaurants, key=lambda r: extract_id_from_url(r.restaurant_url), reverse=True)[:3]
+
+
+        category_results = []
+        for restaurant in sorted_restaurants:
+            avg_evaluation = db.session.query(subquery.c.average_evaluation) \
+                                    .filter(subquery.c.restaurant_id == restaurant.restaurant_id) \
+                                    .scalar()
+
+            avg_evaluation_rounded = round(float(avg_evaluation), 2) if avg_evaluation else None
+
+            category_results.append({
+                "restaurant_id": restaurant.restaurant_id,
+                "restaurant_name": restaurant.restaurant_name,
+                "genre": restaurant.genre,
+                "average_charge": restaurant.average_charge,
+                "restaurant_address": restaurant.restaurant_address,
+                "restaurant_url": restaurant.restaurant_url,
+                "restaurant_image": restaurant.restaurant_image,
+                "regular_holiday": restaurant.regular_holiday,
+                "restaurant_public_evaluation": restaurant.restaurant_public_evaluation,
+                "average_evaluation": avg_evaluation_rounded
+            })
+
+        results[category] = category_results
+
+    return jsonify(results)
 
 if __name__ == "__main__":
     app.run(debug=True)
