@@ -137,7 +137,7 @@ export default function Myparty3() {
     };
 
     const handleRecommendChange = () => {
-        const url = `/mypage/recommend_random?select=${binaryString}${binaryString2}`;
+        const url = `/mypage/recommend?select=${binaryString}${binaryString2}`;
         window.open(url, '_blank');
     };
 
