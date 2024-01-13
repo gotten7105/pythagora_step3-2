@@ -20,8 +20,8 @@ export default function OneRecommendInfoCard({
                 <p>予算目安: {average_charge}円</p>
                 <p>定休日: {regular_holiday}</p>
                 <p>住所: {restaurant_address}</p>
-                <p>ぐるなび評価: {restaurant_public_evaluation}</p>
-                <p>Cheers評価: {average_evaluation}</p>
+                <p>食べログ評価: {restaurant_public_evaluation}</p>
+                <p>Cheers!評価: {average_evaluation}</p>
                 <p>リンク: {restaurant_url}</p>
             </div>
         </div>
