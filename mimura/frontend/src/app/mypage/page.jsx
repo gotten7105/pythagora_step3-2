@@ -22,6 +22,8 @@ export default function Mypage() {
         console.log(myfavoriteData);
         setMyfavorites(myfavoriteData);
 
+
+
         };
 
         fetchAndSetUser();
@@ -29,23 +31,21 @@ export default function Mypage() {
 
     return (
         <>
-            <div className="bg-[#FEF5EE] p-4 flex justify-center space-x-4">
-                <div style={{width:"1059px"}}>
-                <OneUserInfoCard {...user} />
+            <div className="card bordered bg-white border-blue-200 border-2 max-w-sm m-4">
+                <div className="btn btn-primary m-4 text-2xl">
+                <button onClick={() => router.push(`/mypage/task?mail_address=${mail_address}`)}>
+                    懇親会作成
+                </button>
                 </div>
+                {/* <OneUserInfoCard {...user} /> */}
             </div>
-            <div className="bg-[#FEF5EE] p-4 flex justify-center space-x-4">
-                <div>
-                    <h2 className="text-2xl mb-2">restaurant</h2>            
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {myfavorites.map((myfavorite, index) => (
-                        <div key={index} >
-                            <OneMyfavoriteInfoCard {...myfavorite} />
-                        </div>
-                        ))}
-                    </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {myfavorites.map((myfavorite, index) => (
+                <div key={index} className="card bordered bg-white border-blue-200 border-2 flex flex-row max-w-sm m-4">
+                    <OneMyfavoriteInfoCard {...myfavorite} />
                 </div>
-            </div>            
+                ))}
+            </div>
         </>
     )
 }

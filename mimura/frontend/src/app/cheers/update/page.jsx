@@ -1,45 +1,14 @@
 "use client"
+import { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import fetchEvent from './fetchEvent';
+
 import { Button } from "@/components/ui/button"
 import { SelectValue, SelectTrigger, SelectItem, SelectContent, Select } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Textarea } from "@/components/ui/textarea"
-
-
-// export default function Home(){
-//   return(
-//     < Update />
-//   )
-// }
-// function CheersUpdet() {
-//   const formRef = useRef();
-//   const router = useRouter();
-//   const handleSend = async (event) => {
-//       event.preventDefault();
-//       const formData = new FormData(formRef.current);
-//       const body_msg = JSON.stringify({
-//           mail_address: formData.get("mail_address"),
-//           password: formData.get("password"),
-//   });
-//       console.log(body_msg);
-//       const response = await fetch('http://127.0.0.1:5000/login', {
-//           method: 'POST',
-//           body: body_msg,
-//           headers: {
-//               'Content-Type': 'application/json',
-//           },
-//       });
-
-//   if (response.ok) {
-//       console.log('送信成功');
-//       const jsonData = await response.json();
-//       console.log(jsonData);
-//       router.push("/home");
-//   } else {
-//       console.log('送信失敗:', response.statusText);
-//   }
-// };
-
+import { Label } from "@/components/ui/label"
 
 export default function CheersUpdate() {
   return (
