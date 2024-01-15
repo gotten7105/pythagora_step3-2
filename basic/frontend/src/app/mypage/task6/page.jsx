@@ -1,5 +1,4 @@
 "use client"
-// Mypage4.client.jsx
 import React, { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import fetchEvent from './fetchEvent';
@@ -34,15 +33,15 @@ const StarRating = ({ rating }) => {
   );
 };
 
-
 export default function Mypage4() {
   const router = useRouter();
   const [searchParams] = useSearchParams();
   const event_id = useSearchParams().get('event_id');
   const [eventData, setEventData] = useState({});
   const [restaurantData, setRestaurantData] = useState({});
+  const [attendanceList, setAttendanceList] = useState([]); // attendanceListを定義
   const [loading, setLoading] = useState(true);
-  
+
   // 調整さん機能ボタンのイベントハンドラー
   const handleAdjustButton = () => {
     router.push(`/mypage/task5?event_id=${event_id}`);
@@ -50,12 +49,30 @@ export default function Mypage4() {
 
   // レストラン情報を取得する関数
   const fetchAndSetRestaurant = async (restaurantId) => {
-    const response = await fetch(`http://localhost:5000/set_restaurant?event_id=${restaurantId}`);
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
+    try {
+      const response = await fetch(`http://localhost:5000/set_restaurant?event_id=${restaurantId}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setRestaurantData(data);
+    } catch (error) {
+      console.error('Failed to fetch restaurant data:', error);
     }
-    const data = await response.json();
-    setRestaurantData(data);
+  };
+
+  // 出席者一覧を取得する関数
+  const fetchAttendanceList = async (eventId) => {
+    try {
+      const response = await fetch(`http://localhost:5000/attendance_list?event_id=${eventId}`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setAttendanceList(data);
+    } catch (error) {
+      console.error('Failed to fetch attendance list:', error);
+    }
   };
 
   useEffect(() => {
@@ -64,6 +81,7 @@ export default function Mypage4() {
         const data = await fetchEvent(event_id);
         setEventData(data);
         await fetchAndSetRestaurant(data.restaurant_id);
+        await fetchAttendanceList(event_id);
       } catch (error) {
         console.error('Failed to fetch event data:', error);
       } finally {
@@ -79,7 +97,6 @@ export default function Mypage4() {
   if (loading) {
     return <p>Loading...</p>;
   }
-
 
   // JSX部分
   return (
@@ -150,6 +167,17 @@ export default function Mypage4() {
           </div>
         </div>
       </div>
+
+<div>
+  <h3>出席者一覧</h3>
+  <ul>
+    {attendanceList
+      .filter((attendee) => attendee.attendance !== 0) // attendanceが0でない人をフィルタリング
+      .map((attendee) => (
+        <li key={attendee.user_id}>{attendee.user_name} - {attendee.company}</li>
+      ))}
+  </ul>
+</div>
 
       {/* 操作ボタン */}
       <div className="flex justify-between items-center mt-6">
