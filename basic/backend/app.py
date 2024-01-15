@@ -7,8 +7,10 @@ from sqlalchemy import func
 from sqlalchemy import desc
 import json
 import re
-
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 import requests
+import uuid
+import hashlib
 
 app = Flask(__name__)
 CORS(app, origins=["*"]) # 許可するオリジンを指定
@@ -643,3 +645,60 @@ def get_recommend_new_open():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+@app.route("/attendance", methods=['POST'])
+@jwt_required()
+def register_attendance():
+    try:
+        current_user_id = get_jwt_identity()
+        data = request.get_json()
+        event_id = data['event_id']
+        attendance = data['attendance']
+
+        participant = Participant_information.query.filter_by(event_id=event_id, user_id=current_user_id).first()
+        if participant:
+            participant.attendance = attendance
+        else:
+            new_participant = Participant_information(
+                uuid=str(uuid.uuid4()),  # UUIDを文字列に変換して設定
+                event_id=event_id,
+                user_id=current_user_id,
+                attendance=1 if attendance == 'attend' else 0,  # 出席なら1、欠席なら0を設定
+                last_update=datetime.now()
+            )
+            db.session.add(new_participant)
+
+        db.session.commit()
+        return jsonify({"message": "Attendance information registered successfully"}), 200
+    except Exception as e:
+        app.logger.error(f"Error registering attendance: {str(e)}")
+        return jsonify({"message": "Internal Server Error"}), 500
+
+@app.route("/attendance_list", methods=['GET'])
+def get_attendance_list():
+    try:
+        event_id = request.args.get('event_id')  # イベントIDをクエリパラメータから取得
+
+        # イベントIDに紐づく出席者情報をデータベースから取得
+        attendees = Participant_information.query.filter_by(event_id=event_id).all()
+
+        # 出席者情報をリストに整形
+        attendance_list = []
+        for attendee in attendees:
+            user = User.query.filter_by(user_id=attendee.user_id).first()
+            if user:
+                attendee_info = {
+                    "user_id": user.user_id,
+                    "user_name": user.user_name,
+                    "company": user.company,
+                    "attendance": attendee.attendance,  # attendance情報を含める
+                    # 他のユーザー情報も必要に応じて追加
+                }
+                attendance_list.append(attendee_info)
+
+        # JSON形式で出席者リストを返す
+        return jsonify(attendance_list), 200
+
+    except Exception as e:
+        app.logger.error(f"Error fetching attendance list: {str(e)}")
+        return jsonify({"message": "Internal Server Error"}), 500
