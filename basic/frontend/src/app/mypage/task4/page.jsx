@@ -42,11 +42,6 @@ export default function Mypage4() {
   const [eventData, setEventData] = useState({});
   const [restaurantData, setRestaurantData] = useState({});
   const [loading, setLoading] = useState(true);
-  
-  // 調整さん機能ボタンのイベントハンドラー
-  const handleAdjustButton = () => {
-    router.push(`/mypage/task5?event_id=${event_id}`);
-  };
 
   // レストラン情報を取得する関数
   const fetchAndSetRestaurant = async (restaurantId) => {
@@ -101,7 +96,7 @@ export default function Mypage4() {
             {eventData.event_time}
           </p>
         </div>
-        <Button className="self-end" onClick={handleAdjustButton}>▶ 調整さん機能</Button>
+        <Button className="self-end">▶ 調整さん機能</Button>
       </div>
 
       {/* ゲスト情報 */}
