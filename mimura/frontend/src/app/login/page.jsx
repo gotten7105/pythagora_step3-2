@@ -29,13 +29,14 @@ function LoginPage() {
         console.log('送信成功');
         const jsonData = await response.json();
         console.log(jsonData);
-        router.push("/home");
+        router.push(`http://localhost:3000/home?mail_address=${formData.get("mail_address")}`);
     } else {
         console.log('送信失敗:', response.statusText);
     }
 };
 
     return (
+        <div className="bg-[#FEF5EE] min-h-screen">
         <Card className="mx-auto max-w-lg">
             <CardHeader className="space-y-2">
                 <CardTitle className="text-3xl font-bold text-blue">Login</CardTitle>
@@ -57,6 +58,7 @@ function LoginPage() {
                 </form>
             </CardContent>
         </Card>
+        </div>
     );
 }
 
