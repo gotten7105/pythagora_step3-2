@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { SelectValue, SelectTrigger, SelectItem, SelectContent, Select } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Label } from "@/components/ui/label"
 
 export default function Myparty3() {
     const router = useRouter();
@@ -111,10 +112,10 @@ export default function Myparty3() {
         return Object.keys(buttonStates).map((buttonName) => (
             <Button
                 key={buttonName}
-                className={`rounded-full ${buttonStates[buttonName] ? "bg-red-500" : "bg-blue-500"}`}
-                variant="ghost"
+                className={`rounded-full ${buttonStates[buttonName] ? "bg-blue text-white" : "bg-background"}`}
+                variant="outline"
                 onClick={() => toggleButtonState(buttonName)}>
-                <Badge variant="secondary">{buttonName}</Badge>
+                {buttonName}
             </Button>
         ));
     };
@@ -123,10 +124,10 @@ export default function Myparty3() {
         return Object.keys(button2States).map((buttonName) => (
             <Button
                 key={buttonName}
-                className={`rounded-full ${button2States[buttonName] ? "bg-red-500" : "bg-blue-500"}`}
-                variant="ghost"
+                className={`rounded-full ${button2States[buttonName] ? "bg-blue text-white" : "bg-background"}`}
+                variant="outline"
                 onClick={() => toggle2ButtonState(buttonName)}>
-                <Badge variant="secondary">{buttonName}</Badge>
+                {buttonName}
             </Button>
         ));
     };
@@ -166,40 +167,41 @@ export default function Myparty3() {
     };
 
     return (
-        (<div key="1" className="max-w-4xl mx-auto my-8 p-8 bg-white rounded-lg shadow">
-            <h2 className="text-2xl font-bold mb-6 flex justify-between items-center">
+        (<div key="1" className="max-w-4xl mx-auto my-8 p-8 bg-white rounded-lg">
+            <h2 className="text-2xl text-blue font-bold mb-6 flex justify-between items-center">
             {event_name}
             <Button variant="outline">
                 <FileEditIcon className="h-4 w-4" />
             </Button>
             </h2>
-            <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className="grid md:grid-cols-3 gap-4 my-5">
                 <div className="flex flex-col">
-                <label className="mb-2" htmlFor="start-date">
+                <Label className="mb-2" htmlFor="start-date">
                     日付
-                </label>
+                </Label>
                 <p className="border rounded-full px-4 py-2" id="start-date">
                 {event_date}
                 </p>
                 </div>
                 <div className="flex flex-col">
-                <label className="mb-2" htmlFor="end-date">
+                <Label className="mb-2" htmlFor="end-date">
                     時間
-                </label>
+                </Label>
                 <p className="border rounded-full px-4 py-2" id="end-date">
                 {event_time}
                 </p>
                 </div>
-                <Button className="self-end">▶ 調整さん機能</Button>
+                <Button className="self-end">調整さん機能</Button>
             </div>
-            <div className="grid grid-cols-3 gap-4 mb-6">
+            <hr style={{ margin: '0 auto',  borderWidth: '2px' }}/>
+            <div className="grid md:grid-cols-3 gap-4 my-5">
                 <div className="flex flex-col">
                 <label className="mb-2" htmlFor="name">
                     人数
                 </label>
                 <Select>
                     <SelectTrigger id="number">
-                    <SelectValue placeholder="Select" />
+                    <SelectValue placeholder="参加人数を選択してください" />
                     </SelectTrigger>
                     <SelectContent position="popper">
                     <SelectItem value="1">1</SelectItem>
@@ -219,9 +221,10 @@ export default function Myparty3() {
                     <SelectItem value="5">5</SelectItem>
                 </SelectContent>
                 </Select>
-                <Button className="self-end">▶ 出欠さん機能</Button>
+                <Button className="self-end">出欠さん機能</Button>
             </div>
-            <div className="grid grid-cols-3 gap-4 mb-6">
+            <hr style={{ margin: '0 auto',  borderWidth: '2px' }}/>
+            <div className="grid md:grid-cols-3 gap-4 my-5">
                 <div className="flex flex-col">
                 <label className="mb-2" htmlFor="email">
                     ゲスト
@@ -230,9 +233,10 @@ export default function Myparty3() {
                     {guest_email}
                 </p>
                 </div>
-                <Button className="self-end" onClick={handleGuestChange}>▶ ゲストの好きな料理ジャンルやこだわりを探す</Button>
+                <Button className="self-end" onClick={handleGuestChange}>ゲストの好みをチェック</Button>
             </div>
-            <div className="grid grid-cols-3 gap-4 mb-6">
+            <hr style={{ margin: '0 auto',  borderWidth: '2px' }}/>
+            <div className="grid md:grid-cols-3 gap-4 my-5">
                 <div className="flex flex-col">
                 <label className="mb-2" htmlFor="quantity">
                     予算(1人当たり)
@@ -240,55 +244,61 @@ export default function Myparty3() {
                 <input
                     className="border rounded-full px-4 py-2"
                     min="0"
-                    placeholder="Enter amount in units of 1000"
+                    placeholder="1000円単位で選択"
                     step="1000"
                     type="number" />
                 </div>
                 <Select>
                 <SelectContent position="popper">
                     <SelectItem value="yen">円</SelectItem>
-                    <SelectItem value="usd">ドル</SelectItem>
                 </SelectContent>
                 </Select>
             </div>
-            <div className="mb-6">
-                <label className="mb-2 block" htmlFor="details">店舗ジャンル</label>
-                <ScrollArea className="h-32 w-full rounded-md border p-2">
-                    <div className="space-x-2">
+            <hr style={{ margin: '0 auto',  borderWidth: '2px' }}/>
+            <div className="my-5">
+                <label className="mb-2 block" htmlFor="details">
+                    店舗ジャンル
+                </label>
+                {/* <ScrollArea className="h-32 w-full rounded-md border p-2"> */}
+                    <div className="space-x-2 space-y-2">
                         {renderGenreButtons()}
                     </div>
-                </ScrollArea>
+                {/* </ScrollArea> */}
             </div>
-            <div className="mb-6">
-                <label className="mb-2 block" htmlFor="details">店舗ジャンル</label>
-                <ScrollArea className="h-32 w-full rounded-md border p-2">
-                    <div className="space-x-2">
+            <div className="my-5">
+                <label className="mb-2 block" htmlFor="details">
+                    こだわり
+                </label>
+                {/* <ScrollArea className="h-32 w-full rounded-md border p-2"> */}
+                    <div className="space-x-2 space-y-2">
                         {render2GenreButtons()}
                     </div>
-                </ScrollArea>
-                
+                {/* </ScrollArea> */}                
             </div>
-            <div className="mb-6">
+            <hr style={{ margin: '0 auto',  borderWidth: '2px' }}/>
+            <div className="grid md:grid-cols-3 gap-4 my-5">
+                <div className="flex flex-col md:col-span-2">
                 <label className="mb-2 block" htmlFor="note">
                 店名
                 </label>
-                <input className="border rounded w-2/3 px-4 py-2"
+                <input className="border rounded-full px-4 py-2"
+                placeholder="店舗IDを入力してください"
                 name="restaurant_id"
                 type="number"
                 onBlur={handleRestaurantChange}
                 ref={shop}
                 />
-                <Button className="self-end" onClick={handleRecommendChange}>▶ リコメンド</Button>
+                </div>
+                <Button className="self-end md:col-span-1" onClick={handleRecommendChange}>cheersのおすすめ</Button>
             </div>
             
             <div className="flex justify-between items-center">
                 <Button variant="outline">キャンセル</Button>
-                <Button className="bg-blue-600 text-white">保存</Button>
+                <Button className="text-white">保存</Button>
             </div>
         </div>)
         );
     }
-
 
     function FileEditIcon(props) {
         return (

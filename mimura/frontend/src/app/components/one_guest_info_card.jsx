@@ -48,12 +48,12 @@ export default function OneGuestInfoCard({
             </p>
             </div>
 
-            <div className='py-5'>
+            {/* <div className='py-5'>
             <h2 className="text-xl font-bold text-blue"> # archive</h2>
             <p className="text-sm">
             {guest_email}さんは3件の懇親会にゲストとして登録されています。
             </p>
-            </div>
+            </div> */}
     </div>
     </>
   );
