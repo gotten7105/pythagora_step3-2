@@ -52,7 +52,7 @@ export default function OneMyfavoriteInfoCard({
                     className="mb-2"
                     height={200}
                     src={restaurant_image}
-                    ref={{restaurant_url}}
+                    // ref={{restaurant_url}}
                     style={{
                     aspectRatio: "300/200",
                     objectFit: "cover",
@@ -61,7 +61,7 @@ export default function OneMyfavoriteInfoCard({
                 />
                 </a>
                 <div className="flex items-center justify-between">
-                    <div className="flex items-center">
+                    <div className="flex items-center">グルメサイト評価　
                     {renderStars()}
                     </div>
                     <span>{restaurant_public_evaluation}</span>

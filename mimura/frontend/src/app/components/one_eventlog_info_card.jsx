@@ -64,7 +64,7 @@ export default function OneEventlogInfoCard({
                         <CardTitle className="text-blue">{event_name}</CardTitle>
                     </div>
                     <div className="col-span-1 flex items-center justify-between">
-                        <div className="flex items-center">
+                        <div className="flex items-center">懇親会評価
                         {renderStars2()}
                         </div>
                         <span>{event_evaluation_ave}</span>
@@ -111,7 +111,7 @@ export default function OneEventlogInfoCard({
                             料理ジャンル：{genre}
                         </CardDescription>
                         <div className="flex items-center justify-between">
-                            <div className="flex items-center">
+                            <div className="flex items-center">店舗評価
                             {renderStars()}
                             </div>
                         <span>{restaurant_public_evaluation}</span>

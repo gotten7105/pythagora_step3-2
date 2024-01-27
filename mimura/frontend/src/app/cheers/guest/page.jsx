@@ -30,6 +30,7 @@ export default function Guestpage() {
         fetchAndSetGuest();
 
     }, []);
+    
 
     return (
         <>
@@ -40,13 +41,19 @@ export default function Guestpage() {
             <div className='pt-5'>
                 <Label htmlFor="guest">ゲストメールアドレス</Label>
                 <div className='grid grid-cols-3 py-2'>
-                    <Input className="col-span-2" id="guest" name="guest" placeholder="ゲストのメールアドレスを入力してください" required type="email" />
+                    <Input className="col-span-2" id="guest" name="guest" placeholder={guest_email} required type="email" />
                     <Button className="w-2/3 mx-auto" type="submit">検索</Button>
                 </div>
             </div>
             <OneGuestInfoCard {...guest} />
             </div>
-            <div className="container md:w-3/5 mx-auto px-5 my-5 gap-5">
+            <div className="container md:w-3/5 mx-auto px-10 my-5 gap-5">
+                <div className='py-5'>
+                <h2 className="text-xl font-bold text-blue"> # archive</h2>
+                <p className="text-sm">
+                {guest_email}さんは {eventLogs.length}件の懇親会にゲストとして登録されています。
+                </p>
+                </div>
                 {eventLogs.map((eventLog, index) => (
                 <div key={index}>
                     <OneEventlogInfoCard {...eventLog} />

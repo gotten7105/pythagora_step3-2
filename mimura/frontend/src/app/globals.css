@@ -3,8 +3,16 @@
 @tailwind utilities;
 
 /* styles.module.css */
-.container {
+/* .container {
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr; /* 3つのカラム */
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 20px;
-}  
+}   */
+ /* 3つのカラム */
+
+/* styles/globals.css */
+
+body {
+    background-color: #FEF5EE; /* 薄い灰色の背景 */
+  }
+  
